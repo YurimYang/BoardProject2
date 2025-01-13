@@ -1,19 +1,17 @@
 package com.example.board_project.domain.entity;
 
+import com.example.board_project.global.common.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Getter
 @NoArgsConstructor
 @Document(collection = "board")
-public class Board {
+public class Board extends BaseEntity {
 
     @Transient
     public static final String SEQUENCE_NAME = "board_sequence";
@@ -24,19 +22,16 @@ public class Board {
     private String title;
     private String content;
     private String writer;
-    private Date createdAt;
+
 
     public void setId(Long id) {
         this.id = id;
     }
 
-
     @Builder
-    public Board(String title, String content, String writer, Date createdAt) {
+    public Board(String title, String content, String writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.createdAt = createdAt;
     }
-
 }

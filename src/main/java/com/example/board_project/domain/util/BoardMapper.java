@@ -13,7 +13,6 @@ public final class BoardMapper {
                 .title(postRequest.title())
                 .content(postRequest.content())
                 .writer(postRequest.writer())
-                .createdAt(postRequest.date())
                 .build();
     }
 }

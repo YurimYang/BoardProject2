@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Component
 public class BoardModelListener extends AbstractMongoEventListener<Board> {
@@ -15,5 +17,6 @@ public class BoardModelListener extends AbstractMongoEventListener<Board> {
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Board> event) {
         event.getSource().setId(sequenceGeneratorService.generateSequence(Board.SEQUENCE_NAME));
+        event.getSource().setCreatedAt(LocalDateTime.now());
     }
 }
