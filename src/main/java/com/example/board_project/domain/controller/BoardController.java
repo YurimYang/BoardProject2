@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/boards")
+@RequestMapping("v1/boards")
 @Tag(name = "onboarding project api", description = "온보딩 프로젝트 관련 API")
 public class BoardController {
 
@@ -25,7 +25,7 @@ public class BoardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "글 등록 API", description = "글을 게시판에 등록하는 API입니다.")
+    @Operation(summary = "게시글 등록 API", description = "글을 게시판에 등록하는 API입니다.")
     public ResponseDTO<String> createPost(@Valid @RequestBody PostRequest postRequest) {
         String boardId = boardService.createBoard(postRequest);
         return ResponseDTO.res(boardId, "게시판에 글 등록을 성공했습니다.");
@@ -67,6 +67,4 @@ public class BoardController {
         boardService.deletePost(postId);
         return ResponseDTO.res(postId + "번 글 삭제에 성공했습니다.");
     }
-
 }
-
