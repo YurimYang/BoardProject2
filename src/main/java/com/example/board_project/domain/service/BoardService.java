@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,15 +33,33 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public PostResponse getPost(String postId) {
+        if(isDeleted(postId)) {
+            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
+        }
         Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
         return BoardMapper.toPostResponse(searchedBoard);
     }
 
     @Transactional
     public String updatePost(String postId, PostPatchRequest postPatchRequest) {
+        if(isDeleted(postId)) {
+            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
+        }
         Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
         searchedBoard.updatePost(postPatchRequest.title(), postPatchRequest.content());
         boardRepository.save(searchedBoard);
         return searchedBoard.getId();
+    }
+
+    @Transactional
+    public void deletePost(String postId) {
+        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        searchedBoard.delete(LocalDateTime.now());
+        boardRepository.save(searchedBoard);
+    }
+
+    private boolean isDeleted(String postId) {
+        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        return searchedBoard.isDeleted();
     }
 }

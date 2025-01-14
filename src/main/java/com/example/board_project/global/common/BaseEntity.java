@@ -24,7 +24,7 @@ public class BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime deletedAt;
 
-    protected void delete(LocalDateTime currentTime) {
+    public void delete(LocalDateTime currentTime) {
         if (deletedAt == null) {
             deletedAt = currentTime;
         }

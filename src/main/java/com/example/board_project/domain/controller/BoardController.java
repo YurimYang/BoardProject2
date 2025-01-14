@@ -50,5 +50,14 @@ public class BoardController {
     public ResponseDTO<String> updatePost(@PathVariable("post_id") String postId, @Valid @RequestBody PostPatchRequest postPatchRequest) {
         return ResponseDTO.res(boardService.updatePost(postId, postPatchRequest), postId + "번 글 수정에 성공했습니다.");
     }
+
+    @DeleteMapping("/post-history/{post_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "특정 게시글 삭제 API", description = "게시판의 특정 글을 삭제하는 API입니다.")
+    public ResponseDTO<String> deletePost(@PathVariable("post_id") String postId) {
+        boardService.deletePost(postId);
+        return ResponseDTO.res(postId + "번 글 삭제에 성공했습니다.");
+    }
+
 }
 
