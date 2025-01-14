@@ -1,5 +1,6 @@
 package com.example.board_project.domain.controller;
 
+import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
 import com.example.board_project.domain.dto.response.PostResponse;
 import com.example.board_project.domain.service.BoardService;
@@ -24,8 +25,8 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "글 등록 API", description = "글을 게시판에 등록하는 API입니다.")
-    public ResponseDTO<Long> createPost(@Valid @RequestBody PostRequest postRequest) {
-        Long boardId = boardService.createBoard(postRequest);
+    public ResponseDTO<String> createPost(@Valid @RequestBody PostRequest postRequest) {
+        String boardId = boardService.createBoard(postRequest);
         return ResponseDTO.res(boardId, "게시판에 글 등록을 성공했습니다.");
     }
 
@@ -39,9 +40,15 @@ public class BoardController {
     @GetMapping("/post-history/{post_id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "특정 게시글 조회 API", description = "게시판의 특정 글을 조회하는 API입니다.")
-    public ResponseDTO<PostResponse> getPost(@PathVariable("post_id") long postId) {
+    public ResponseDTO<PostResponse> getPost(@PathVariable("post_id") String postId) {
         return ResponseDTO.res(boardService.getPost(postId), postId + "번 글 조회에 성공했습니다.");
     }
-}
 
+    @PatchMapping("/post-history/{post_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "특정 게시글 수정 API", description = "게시판의 특정 글을 수정하는 API입니다.")
+    public ResponseDTO<String> updatePost(@PathVariable("post_id") String postId, @Valid @RequestBody PostPatchRequest postPatchRequest) {
+        return ResponseDTO.res(boardService.updatePost(postId, postPatchRequest), postId + "번 글 수정에 성공했습니다.");
+    }
+}
 

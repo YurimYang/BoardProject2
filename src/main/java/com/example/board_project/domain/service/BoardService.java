@@ -1,5 +1,6 @@
 package com.example.board_project.domain.service;
 
+import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
 import com.example.board_project.domain.dto.response.PostResponse;
 import com.example.board_project.domain.entity.Board;
@@ -20,7 +21,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long createBoard(PostRequest postRequest) {
+    public String createBoard(PostRequest postRequest) {
         return boardRepository.save(BoardMapper.toBoard(postRequest)).getId();
     }
 
@@ -30,8 +31,16 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public PostResponse getPost(Long postId) {
+    public PostResponse getPost(String postId) {
         Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
         return BoardMapper.toPostResponse(searchedBoard);
+    }
+
+    @Transactional
+    public String updatePost(String postId, PostPatchRequest postPatchRequest) {
+        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        searchedBoard.updatePost(postPatchRequest.title(), postPatchRequest.content());
+        boardRepository.save(searchedBoard);
+        return searchedBoard.getId();
     }
 }
