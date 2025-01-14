@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "board")
@@ -30,6 +32,7 @@ public class Board extends BaseEntity {
 
     @Builder
     public Board(String title, String content, String writer) {
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.content = content;
         this.writer = writer;
