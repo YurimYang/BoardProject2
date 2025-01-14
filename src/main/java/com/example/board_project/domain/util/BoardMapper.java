@@ -1,7 +1,7 @@
 package com.example.board_project.domain.util;
 
 import com.example.board_project.domain.dto.request.PostRequest;
-import com.example.board_project.domain.dto.response.AllPostsResponse;
+import com.example.board_project.domain.dto.response.PostResponse;
 import com.example.board_project.domain.entity.Board;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,16 +20,16 @@ public final class BoardMapper {
                 .build();
     }
 
-    public static List<AllPostsResponse> toAllPostListResponse(List<Board> boardList) {
-        List<AllPostsResponse> allPostsResponses = new ArrayList<>();
+    public static List<PostResponse> toAllPostListResponse(List<Board> boardList) {
+        List<PostResponse> postRespons = new ArrayList<>();
         for(Board board : boardList) {
-            allPostsResponses.add(toAllPostsResponse(board));
+            postRespons.add(toPostResponse(board));
         }
-        return allPostsResponses;
+        return postRespons;
     }
 
-    public static AllPostsResponse toAllPostsResponse(Board board) {
-        return AllPostsResponse.builder()
+    public static PostResponse toPostResponse(Board board) {
+        return PostResponse.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
