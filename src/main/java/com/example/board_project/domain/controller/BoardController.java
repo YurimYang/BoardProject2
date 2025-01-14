@@ -8,6 +8,7 @@ import com.example.board_project.global.common.ResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,14 @@ public class BoardController {
     @Operation(summary = "특정 게시글 조회 API", description = "게시판의 특정 글을 조회하는 API입니다.")
     public ResponseDTO<PostResponse> getPost(@PathVariable("post_id") String postId) {
         return ResponseDTO.res(boardService.getPost(postId), postId + "번 글 조회에 성공했습니다.");
+    }
+
+    /**pagination 구현**/
+    @GetMapping("/post-history/pagination")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "(페이지네이션 적용) 게시글 전체 조회 API", description = "게시판의 글을 전체 조회하는 API입니다.")
+    public ResponseDTO<List<PostResponse>> getAllPostsByPagination(@RequestParam @NotNull Integer page) {
+        return ResponseDTO.res(boardService.getAllPostsByPagination(page), "게시판 전체 조회에 성공했습니다.");
     }
 
     @PatchMapping("/post-history/{post_id}")
