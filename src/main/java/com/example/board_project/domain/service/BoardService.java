@@ -36,34 +36,28 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPostsByPagination(Integer page){
-        Page<Board> boardPage;
-        Pageable pageable = PageRequest.of(page, 10);
-        boardPage = boardRepository.findAll(pageable);
-
-        if(boardPage.isEmpty()){
-            throw new PageNotFoundException(ErrorCode.PAGE_NOT_FOUND);
-        }
-
-        return BoardMapper.toAllPostListResponse(boardPage.toList());
+    public PostResponse getPost(String postId) {
+        Board searchedBoard = findActivePostById(postId);
+        return BoardMapper.toPostResponse(searchedBoard);
     }
 
     @Transactional(readOnly = true)
-    public PostResponse getPost(String postId) {
-        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
-        if(searchedBoard.isDeleted()){
-            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
-        }
-        return BoardMapper.toPostResponse(searchedBoard);
+    public List<PostResponse> getAllPostsByPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        validatePage(boardPage);
+        return BoardMapper.toAllPostListResponse(boardPage.toList());
+    }
 
+    private void validatePage(Page<Board> boardPage) {
+        if(boardPage.isEmpty()){
+            throw new PageNotFoundException(ErrorCode.PAGE_NOT_FOUND);
+        }
     }
 
     @Transactional
     public String updatePost(String postId, PostPatchRequest postPatchRequest) {
-        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
-        if(searchedBoard.isDeleted()){
-            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
-        }
+        Board searchedBoard = findActivePostById(postId);
         searchedBoard.updatePost(postPatchRequest.title(), postPatchRequest.content());
         boardRepository.save(searchedBoard);
         return searchedBoard.getId();
@@ -71,9 +65,14 @@ public class BoardService {
 
     @Transactional
     public void deletePost(String postId) {
-        Board searchedBoard = boardRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        Board searchedBoard = findActivePostById(postId);
         searchedBoard.delete(LocalDateTime.now());
         boardRepository.save(searchedBoard);
     }
 
+    private Board findActivePostById(String postId) {
+        return boardRepository.findById(postId)
+                .filter(p -> !p.isDeleted())
+                .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+    }
 }
