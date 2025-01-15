@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
@@ -20,6 +21,12 @@ public class MongoDBConfig {
         MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         return converter;
+    }
 
+    //MongoTemplate 등록
+    @Bean
+    public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDatabaseFactory,
+                                       MappingMongoConverter mappingMongoConverter) {
+        return new MongoTemplate(mongoDatabaseFactory, mappingMongoConverter);
     }
 }
