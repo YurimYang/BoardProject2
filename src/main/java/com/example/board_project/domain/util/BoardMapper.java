@@ -21,13 +21,13 @@ public final class BoardMapper {
     }
 
     public static List<PostResponse> toAllPostListResponse(List<Board> boardList) {
-        List<PostResponse> postRespons = new ArrayList<>();
+        List<PostResponse> postResponse = new ArrayList<>();
         for(Board board : boardList) {
             if(!board.isDeleted()){
-                postRespons.add(toPostResponse(board));
+                postResponse.add(toPostResponse(board));
             }
         }
-        return postRespons;
+        return postResponse;
     }
 
     public static PostResponse toPostResponse(Board board) {
