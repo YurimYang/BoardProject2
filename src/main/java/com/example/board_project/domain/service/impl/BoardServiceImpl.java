@@ -1,12 +1,12 @@
 package com.example.board_project.domain.service.impl;
 
+import com.example.board_project.domain.dao.BoardDAO;
 import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
 import com.example.board_project.domain.dto.response.PostResponse;
 import com.example.board_project.domain.entity.Board;
 import com.example.board_project.domain.exception.PageNotFoundException;
 import com.example.board_project.domain.exception.PostNotFoundException;
-import com.example.board_project.domain.repository.BoardRepository;
 import com.example.board_project.domain.service.BoardService;
 import com.example.board_project.domain.util.BoardMapper;
 import com.example.board_project.global.exception.ErrorCode;
@@ -17,25 +17,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardRepository boardRepository;
+    private final BoardDAO boardDAO;
 
     @Override
     @Transactional
     public String createBoard(PostRequest postRequest) {
-        return boardRepository.save(BoardMapper.toBoard(postRequest)).getId();
+        return boardDAO.insertBoard(BoardMapper.toBoard(postRequest)).getId();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PostResponse> getAllPosts(){
-        return BoardMapper.toAllPostListResponse(boardRepository.findAll());
+        return BoardMapper.toAllPostListResponse(boardDAO.selectAllBoard());
     }
 
     @Override
@@ -49,7 +48,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public List<PostResponse> getAllPostsByPagination(Integer page){
         Pageable pageable = PageRequest.of(page, 10);
-        Page<Board> boardPage = boardRepository.findAll(pageable);
+        Page<Board> boardPage = boardDAO.selectAllBoardPage(pageable);
         validatePage(boardPage);
         return BoardMapper.toAllPostListResponse(boardPage.toList());
     }
@@ -64,8 +63,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public String updatePost(String postId, PostPatchRequest postPatchRequest) {
         Board searchedBoard = findActivePostById(postId);
-        searchedBoard.updatePost(postPatchRequest.title(), postPatchRequest.content());
-        boardRepository.save(searchedBoard);
+        boardDAO.updateBoard(postId,postPatchRequest);
         return searchedBoard.getId();
     }
 
@@ -73,12 +71,11 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void deletePost(String postId) {
         Board searchedBoard = findActivePostById(postId);
-        searchedBoard.delete(LocalDateTime.now());
-        boardRepository.save(searchedBoard);
+        boardDAO.deleteBoardById(postId, searchedBoard);
     }
 
     private Board findActivePostById(String postId) {
-        return boardRepository.findById(postId)
+        return boardDAO.selectBoardById(postId)
                 .filter(p -> !p.isDeleted())
                 .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
     }

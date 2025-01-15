@@ -22,10 +22,8 @@ public final class BoardMapper {
 
     public static List<PostResponse> toAllPostListResponse(List<Board> boardList) {
         List<PostResponse> postResponse = new ArrayList<>();
-        for(Board board : boardList) {
-            if(!board.isDeleted()){
-                postResponse.add(toPostResponse(board));
-            }
+        for (Board board : boardList) {
+            postResponse.add(toPostResponse(board));
         }
         return postResponse;
     }
