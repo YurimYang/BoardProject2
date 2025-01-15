@@ -1,4 +1,4 @@
-package com.example.board_project.domain.service;
+package com.example.board_project.domain.service.impl;
 
 import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
@@ -7,6 +7,7 @@ import com.example.board_project.domain.entity.Board;
 import com.example.board_project.domain.exception.PageNotFoundException;
 import com.example.board_project.domain.exception.PostNotFoundException;
 import com.example.board_project.domain.repository.BoardRepository;
+import com.example.board_project.domain.service.BoardService;
 import com.example.board_project.domain.util.BoardMapper;
 import com.example.board_project.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
