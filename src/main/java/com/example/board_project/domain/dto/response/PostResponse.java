@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Builder
 public record PostResponse(
         String id,
+        Long seq,
         String title,
         String content,
         String writer,
