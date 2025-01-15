@@ -9,12 +9,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +26,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "201", description = "created", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))
+    })
     @Operation(summary = "게시글 등록 API", description = "글을 게시판에 등록하는 API입니다.")
     public ResponseDTO<String> createPost(@Valid @RequestBody PostRequest postRequest) {
         String boardId = boardService.createBoard(postRequest);
@@ -55,21 +55,27 @@ public class BoardController {
 
     /**pagination 구현**/
     @GetMapping("/post-history/pagination")
-    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))
+    })
     @Operation(summary = "(페이지네이션 적용) 게시글 전체 조회 API", description = "게시판의 글을 전체 조회하는 API입니다.")
     public ResponseDTO<List<PostResponse>> getAllPostsByPagination(@RequestParam @NotNull Integer page) {
         return ResponseDTO.res(boardService.getAllPostsByPagination(page), "게시판 전체 조회에 성공했습니다.");
     }
 
     @PatchMapping("/post-history/{post_id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+    })
     @Operation(summary = "특정 게시글 수정 API", description = "게시판의 특정 글을 수정하는 API입니다.")
     public ResponseDTO<String> updatePost(@PathVariable("post_id") String postId, @Valid @RequestBody PostPatchRequest postPatchRequest) {
         return ResponseDTO.res(boardService.updatePost(postId, postPatchRequest), postId + "번 글 수정에 성공했습니다.");
     }
 
     @DeleteMapping("/post-history/{post_id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+    })
     @Operation(summary = "특정 게시글 삭제 API", description = "게시판의 특정 글을 삭제하는 API입니다.")
     public ResponseDTO<String> deletePost(@PathVariable("post_id") String postId) {
         boardService.deletePost(postId);
