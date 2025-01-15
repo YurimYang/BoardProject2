@@ -33,6 +33,7 @@ public final class BoardMapper {
     public static PostResponse toPostResponse(Board board) {
         return PostResponse.builder()
                 .id(board.getId())
+                .seq(board.getSeq())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writer(board.getWriter())
