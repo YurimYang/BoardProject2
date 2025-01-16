@@ -1,4 +1,4 @@
-package com.example.board_project.domain.entity;
+package com.example.board_project.domain.Board.entity;
 
 import com.example.board_project.global.common.BaseEntity;
 import lombok.*;
