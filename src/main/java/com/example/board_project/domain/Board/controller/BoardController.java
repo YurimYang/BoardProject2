@@ -1,10 +1,10 @@
-package com.example.board_project.domain.controller;
+package com.example.board_project.domain.Board.controller;
 
-import com.example.board_project.domain.dto.request.PostPatchRequest;
-import com.example.board_project.domain.dto.request.PostRequest;
-import com.example.board_project.domain.dto.response.PostResponse;
-import com.example.board_project.domain.enums.BoardSearchEnum;
-import com.example.board_project.domain.service.BoardService;
+import com.example.board_project.domain.Board.dto.request.PostPatchRequest;
+import com.example.board_project.domain.Board.dto.request.PostRequest;
+import com.example.board_project.domain.Board.dto.response.PostResponse;
+import com.example.board_project.domain.Board.enums.BoardSearchEnum;
+import com.example.board_project.domain.Board.service.BoardService;
 import com.example.board_project.global.common.ResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,19 +22,18 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/boards")
-@Tag(name = "onboarding project api", description = "온보딩 프로젝트 관련 API")
+@Tag(name = "BOARD API", description = "온보딩 프로젝트 - 게시판 API")
 public class BoardController {
 
     private final BoardService boardService;
 
     @PostMapping
     @ApiResponse(responseCode = "201", description = "created", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))
     })
     @Operation(summary = "게시글 등록 API", description = "글을 게시판에 등록하는 API입니다.")
-    public ResponseDTO<String> createPost(@Valid @RequestBody PostRequest postRequest) {
-        String boardId = boardService.createBoard(postRequest);
-        return ResponseDTO.res(boardId, "게시판에 글 등록을 성공했습니다.");
+    public ResponseDTO<PostResponse> createPost(@Valid @RequestBody PostRequest postRequest) {
+        return ResponseDTO.res(boardService.createBoard(postRequest), "게시판에 글 등록을 성공했습니다.");
     }
 
     @GetMapping("/post-history")

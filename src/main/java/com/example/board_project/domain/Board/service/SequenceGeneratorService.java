@@ -1,6 +1,6 @@
-package com.example.board_project.domain.service;
+package com.example.board_project.domain.Board.service;
 
-import com.example.board_project.domain.entity.DatabaseSequence;
+import com.example.board_project.domain.Board.entity.DatabaseSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;

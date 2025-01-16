@@ -1,4 +1,4 @@
-package com.example.board_project.domain.enums;
+package com.example.board_project.domain.Board.enums;
 
 public enum BoardSearchEnum {
 

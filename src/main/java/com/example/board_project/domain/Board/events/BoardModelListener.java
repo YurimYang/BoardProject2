@@ -1,7 +1,7 @@
-package com.example.board_project.domain.events;
+package com.example.board_project.domain.Board.events;
 
-import com.example.board_project.domain.entity.Board;
-import com.example.board_project.domain.service.SequenceGeneratorService;
+import com.example.board_project.domain.Board.entity.Board;
+import com.example.board_project.domain.Board.service.SequenceGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;

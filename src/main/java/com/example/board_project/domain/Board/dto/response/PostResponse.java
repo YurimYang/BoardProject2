@@ -1,4 +1,4 @@
-package com.example.board_project.domain.dto.response;
+package com.example.board_project.domain.Board.dto.response;
 
 import lombok.Builder;
 

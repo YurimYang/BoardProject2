@@ -1,14 +1,14 @@
-package com.example.board_project.domain.service;
+package com.example.board_project.domain.Board.service;
 
-import com.example.board_project.domain.dto.request.PostPatchRequest;
-import com.example.board_project.domain.dto.request.PostRequest;
-import com.example.board_project.domain.dto.response.PostResponse;
-import com.example.board_project.domain.enums.BoardSearchEnum;
+import com.example.board_project.domain.Board.dto.request.PostPatchRequest;
+import com.example.board_project.domain.Board.dto.request.PostRequest;
+import com.example.board_project.domain.Board.dto.response.PostResponse;
+import com.example.board_project.domain.Board.enums.BoardSearchEnum;
 
 import java.util.List;
 
 public interface BoardService {
-    String createBoard(PostRequest postRequest);
+    PostResponse createBoard(PostRequest postRequest);
     List<PostResponse> getAllPosts();
     PostResponse getPost(String postId);
     List<PostResponse> getAllPostsByPagination(Integer page);

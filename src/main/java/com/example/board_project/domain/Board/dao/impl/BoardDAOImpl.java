@@ -1,9 +1,9 @@
-package com.example.board_project.domain.dao.impl;
+package com.example.board_project.domain.Board.dao.impl;
 
-import com.example.board_project.domain.dao.BoardDAO;
-import com.example.board_project.domain.dto.request.PostPatchRequest;
-import com.example.board_project.domain.entity.Board;
-import com.example.board_project.domain.enums.BoardSearchEnum;
+import com.example.board_project.domain.Board.dao.BoardDAO;
+import com.example.board_project.domain.Board.dto.request.PostPatchRequest;
+import com.example.board_project.domain.Board.entity.Board;
+import com.example.board_project.domain.Board.enums.BoardSearchEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

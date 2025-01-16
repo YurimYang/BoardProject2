@@ -1,15 +1,15 @@
-package com.example.board_project.domain.service.impl;
+package com.example.board_project.domain.Board.service.impl;
 
-import com.example.board_project.domain.dao.BoardDAO;
-import com.example.board_project.domain.dto.request.PostPatchRequest;
-import com.example.board_project.domain.dto.request.PostRequest;
-import com.example.board_project.domain.dto.response.PostResponse;
-import com.example.board_project.domain.entity.Board;
-import com.example.board_project.domain.enums.BoardSearchEnum;
-import com.example.board_project.domain.exception.PageNotFoundException;
-import com.example.board_project.domain.exception.PostNotFoundException;
-import com.example.board_project.domain.service.BoardService;
-import com.example.board_project.domain.util.BoardMapper;
+import com.example.board_project.domain.Board.dao.BoardDAO;
+import com.example.board_project.domain.Board.dto.request.PostPatchRequest;
+import com.example.board_project.domain.Board.dto.request.PostRequest;
+import com.example.board_project.domain.Board.dto.response.PostResponse;
+import com.example.board_project.domain.Board.entity.Board;
+import com.example.board_project.domain.Board.enums.BoardSearchEnum;
+import com.example.board_project.domain.Board.exception.PageNotFoundException;
+import com.example.board_project.domain.Board.exception.PostNotFoundException;
+import com.example.board_project.domain.Board.service.BoardService;
+import com.example.board_project.domain.Board.util.BoardMapper;
 import com.example.board_project.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,8 +29,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public String createBoard(PostRequest postRequest) {
-        return boardDAO.insertBoard(BoardMapper.toBoard(postRequest)).getId();
+    public PostResponse createBoard(PostRequest postRequest) {
+        return BoardMapper.toPostResponse(boardDAO.insertBoard(BoardMapper.toBoard(postRequest)));
     }
 
     @Override

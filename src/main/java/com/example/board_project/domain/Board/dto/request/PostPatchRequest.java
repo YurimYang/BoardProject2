@@ -1,4 +1,4 @@
-package com.example.board_project.domain.dto.request;
+package com.example.board_project.domain.Board.dto.request;
 
 import jakarta.validation.constraints.Size;
 

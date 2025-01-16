@@ -1,8 +1,10 @@
-package com.example.board_project.domain.dto.request;
+package com.example.board_project.domain.Board.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record PostRequest(
         @NotBlank(message = "제목을 입력해주세요.")
         @Size(min = 1, max = 50, message = "제목은 1자에서 30자 사이로 입력해주세요.")
