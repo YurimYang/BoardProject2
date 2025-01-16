@@ -17,4 +17,5 @@ public interface  BoardDAO {
     void updateBoard(String postId, PostPatchRequest postPatchRequest);
     void deleteBoardById(String postId, Board board);
     List<Board> findByKeyword(BoardSearchEnum type, String keyword);
+    Page<Board> findByKeywordWithPage(BoardSearchEnum type, String keyword, Pageable pageable);
 }

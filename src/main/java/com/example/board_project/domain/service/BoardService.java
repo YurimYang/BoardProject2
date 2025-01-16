@@ -15,4 +15,5 @@ public interface BoardService {
     String updatePost(String postId, PostPatchRequest postPatchRequest);
     void deletePost(String postId);
     List<PostResponse> searchPost(BoardSearchEnum type, String keyword);
+    List<PostResponse> searchPostByPagination(BoardSearchEnum type, String keyword, int page);
 }

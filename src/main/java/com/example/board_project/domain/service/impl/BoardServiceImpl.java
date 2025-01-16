@@ -25,6 +25,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardDAO boardDAO;
+    private final static int PAGE_LIMIT = 10;
 
     @Override
     @Transactional
@@ -48,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<PostResponse> getAllPostsByPagination(Integer page){
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
         Page<Board> boardPage = boardDAO.selectAllBoardPage(pageable);
         validatePage(boardPage);
         return BoardMapper.toAllPostListResponse(boardPage.toList());
@@ -83,6 +84,15 @@ public class BoardServiceImpl implements BoardService {
             throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
         }
         return BoardMapper.toAllPostListResponse(searchedBoards);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostResponse> searchPostByPagination(BoardSearchEnum type, String keyword, int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
+        Page<Board> boardPage = boardDAO.findByKeywordWithPage(type, keyword, pageable);
+        validatePage(boardPage);
+        return BoardMapper.toAllPostListResponse(boardPage.toList());
     }
 
     private Board findActivePostById(String postId) {

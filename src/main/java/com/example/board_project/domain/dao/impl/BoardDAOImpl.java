@@ -79,14 +79,36 @@ public class BoardDAOImpl implements BoardDAO {
                 yield mongoTemplate.find(query, Board.class);
             }
             case CONTENT -> {
-                Query query1 = new Query(Criteria.where("content").regex(keyword));
-                yield mongoTemplate.find(query1, Board.class);
+                Query query = new Query(Criteria.where("content").regex(keyword));
+                yield mongoTemplate.find(query, Board.class);
             }
             case WRITER -> {
-                Query query2 = new Query(Criteria.where("writer").regex(keyword));
-                yield mongoTemplate.find(query2, Board.class);
+                Query query = new Query(Criteria.where("writer").regex(keyword));
+                yield mongoTemplate.find(query, Board.class);
             }
         };
         return boardList;
+    }
+
+    @Override
+    public Page<Board> findByKeywordWithPage(BoardSearchEnum type, String keyword, Pageable pageable) {
+        List<Board> boardList = switch (type) {
+            case TITLE -> {
+                Query query = new Query(Criteria.where("title").regex(keyword)
+                                                .and("deletedAt").is(null)).with(pageable);
+                yield mongoTemplate.find(query, Board.class);
+            }
+            case CONTENT -> {
+                Query query = new Query(Criteria.where("content").regex(keyword)
+                        .and("deletedAt").is(null)).with(pageable);
+                yield mongoTemplate.find(query, Board.class);
+            }
+            case WRITER -> {
+                Query query = new Query(Criteria.where("writer").regex(keyword)
+                        .and("deletedAt").is(null)).with(pageable);
+                yield mongoTemplate.find(query, Board.class);
+            }
+        };
+        return new PageImpl<>(boardList, pageable, boardList.size());
     }
 }

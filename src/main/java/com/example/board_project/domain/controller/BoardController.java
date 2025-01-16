@@ -93,4 +93,13 @@ public class BoardController {
     public ResponseDTO<List<PostResponse>> searchPost(@RequestParam BoardSearchEnum type, @RequestParam @NotBlank String keyword) {
         return ResponseDTO.res(boardService.searchPost(type, keyword), "게시글 검색에 성공했습니다.");
     }
+
+    @GetMapping("/post-history/pagination/search")
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))
+    })
+    @Operation(summary = "(페이지네이션 적용) 게시글 검색 API", description = "게시판의 게시글을 검색하는 API입니다.")
+    public ResponseDTO<List<PostResponse>> searchPostByPagination(@RequestParam BoardSearchEnum type, @RequestParam @NotBlank String keyword, @RequestParam @NotNull Integer page) {
+        return ResponseDTO.res(boardService.searchPostByPagination(type, keyword, page), "게시글 검색에 성공했습니다.");
+    }
 }
