@@ -20,19 +20,23 @@ public class CommentDAOImpl implements CommentDAO {
 
     private final MongoTemplate mongoTemplate;
 
+    @Override
     public Comment insertComment(Comment comment) {
         return mongoTemplate.save(comment);
     }
 
+    @Override
     public Optional<Comment> selectCommentById(String commentId) {
         Comment comment = mongoTemplate.findById(commentId, Comment.class);
         return Optional.ofNullable(comment);
     }
 
+    @Override
     public List<Comment> selectCommentsByPostId(String postId) {
         return mongoTemplate.find(new Query(Criteria.where("postId").is(postId).and("deletedAt").is(null)), Comment.class);
     }
 
+    @Override
     public void updateComment(Comment comment, CommentPatchRequest commentPatchRequest) {
         Query query = new Query(Criteria.where("postId").is(comment.getPostId())
                 .and("id").is(comment.getId())
@@ -43,6 +47,7 @@ public class CommentDAOImpl implements CommentDAO {
         mongoTemplate.updateFirst(query, update, Comment.class);
     }
 
+    @Override
     public void deleteComment(Comment comment) {
         Query query = new Query(Criteria.where("postId").is(comment.getPostId())
                 .and("id").is(comment.getId())
