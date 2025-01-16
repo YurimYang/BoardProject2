@@ -5,6 +5,7 @@ import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
 import com.example.board_project.domain.dto.response.PostResponse;
 import com.example.board_project.domain.entity.Board;
+import com.example.board_project.domain.enums.BoardSearchEnum;
 import com.example.board_project.domain.exception.PageNotFoundException;
 import com.example.board_project.domain.exception.PostNotFoundException;
 import com.example.board_project.domain.service.BoardService;
@@ -72,6 +73,16 @@ public class BoardServiceImpl implements BoardService {
     public void deletePost(String postId) {
         Board searchedBoard = findActivePostById(postId);
         boardDAO.deleteBoardById(postId, searchedBoard);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostResponse> searchPost(BoardSearchEnum type, String keyword) {
+        List<Board> searchedBoards = boardDAO.findByKeyword(type, keyword);
+        if(searchedBoards.isEmpty()){
+            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
+        }
+        return BoardMapper.toAllPostListResponse(searchedBoards);
     }
 
     private Board findActivePostById(String postId) {

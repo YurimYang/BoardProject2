@@ -3,6 +3,7 @@ package com.example.board_project.domain.dao.impl;
 import com.example.board_project.domain.dao.BoardDAO;
 import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.entity.Board;
+import com.example.board_project.domain.enums.BoardSearchEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -68,5 +69,24 @@ public class BoardDAOImpl implements BoardDAO {
 
             mongoTemplate.updateFirst(query, update, Board.class);
         }
+    }
+
+    @Override
+    public List<Board> findByKeyword(BoardSearchEnum type, String keyword) {
+        List<Board> boardList = switch (type) {
+            case TITLE -> {
+                Query query = new Query(Criteria.where("title").regex(keyword));
+                yield mongoTemplate.find(query, Board.class);
+            }
+            case CONTENT -> {
+                Query query1 = new Query(Criteria.where("content").regex(keyword));
+                yield mongoTemplate.find(query1, Board.class);
+            }
+            case WRITER -> {
+                Query query2 = new Query(Criteria.where("writer").regex(keyword));
+                yield mongoTemplate.find(query2, Board.class);
+            }
+        };
+        return boardList;
     }
 }

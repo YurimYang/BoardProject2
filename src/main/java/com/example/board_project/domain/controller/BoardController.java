@@ -3,6 +3,7 @@ package com.example.board_project.domain.controller;
 import com.example.board_project.domain.dto.request.PostPatchRequest;
 import com.example.board_project.domain.dto.request.PostRequest;
 import com.example.board_project.domain.dto.response.PostResponse;
+import com.example.board_project.domain.enums.BoardSearchEnum;
 import com.example.board_project.domain.service.BoardService;
 import com.example.board_project.global.common.ResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -80,5 +82,15 @@ public class BoardController {
     public ResponseDTO<String> deletePost(@PathVariable("post_id") String postId) {
         boardService.deletePost(postId);
         return ResponseDTO.res(postId + "번 글 삭제에 성공했습니다.");
+    }
+
+    /** 추가 구현 - 검색, 댓글 **/
+    @GetMapping("/post-history/search")
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))
+    })
+    @Operation(summary = "게시글 검색 API", description = "게시판의 게시글을 검색하는 API입니다.")
+    public ResponseDTO<List<PostResponse>> searchPost(@RequestParam BoardSearchEnum type, @RequestParam @NotBlank String keyword) {
+        return ResponseDTO.res(boardService.searchPost(type, keyword), "게시글 검색에 성공했습니다.");
     }
 }
