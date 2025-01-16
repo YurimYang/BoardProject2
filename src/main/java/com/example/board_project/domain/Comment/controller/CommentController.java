@@ -1,5 +1,6 @@
 package com.example.board_project.domain.Comment.controller;
 
+import com.example.board_project.domain.Comment.dto.request.CommentPatchRequest;
 import com.example.board_project.domain.Comment.dto.request.CommentRequest;
 import com.example.board_project.domain.Comment.dto.response.CommentResponse;
 import com.example.board_project.domain.Comment.service.CommentService;
@@ -32,12 +33,34 @@ public class CommentController {
         return ResponseDTO.res(commentService.createComment(commentRequest), "댓글 등록을 성공했습니다.");
     }
 
-    @GetMapping("/comment-history")
+    @GetMapping("/comment-history/{post_id}")
     @ApiResponse(responseCode = "200", description = "ok", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class))
     })
     @Operation(summary = "댓글 전체 조회 API", description = "게시판의 글을 전체 조회하는 API입니다.")
-    public ResponseDTO<List<CommentResponse>> getAllPosts(String postId) {
+    public ResponseDTO<List<CommentResponse>> getAllPosts(@PathVariable("post_id") String postId) {
         return ResponseDTO.res(commentService.getAllComments(postId), "해당 게시글의 댓글 조회에 성공했습니다.");
     }
+
+    @PatchMapping("/comment-history/{comment_id}")
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+    })
+    @Operation(summary = "특정 게시글 수정 API", description = "특정 댓글을 수정하는 API입니다.")
+    public ResponseDTO<String> updateComment(@PathVariable("comment_id") String commentId, @Valid @RequestBody CommentPatchRequest commentPatchRequest) {
+        commentService.updateComment(commentId, commentPatchRequest);
+        return ResponseDTO.res("게시글 수정에 성공했습니다.");
+    }
+
+    @DeleteMapping("/comment-history/{comment_id}")
+    @ApiResponse(responseCode = "200", description = "ok", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+    })
+    @Operation(summary = "특정 댓글 삭제 API", description = "특정 댓글을 삭제하는 API입니다.")
+    public ResponseDTO<String> deleteComment(@PathVariable("comment_id") String commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseDTO.res("댓글 삭제에 성공했습니다.");
+    }
+
+
 }
