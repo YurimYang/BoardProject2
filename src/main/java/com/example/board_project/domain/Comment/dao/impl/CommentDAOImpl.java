@@ -33,7 +33,8 @@ public class CommentDAOImpl implements CommentDAO {
 
     @Override
     public List<Comment> selectCommentsByPostId(String postId) {
-        return mongoTemplate.find(new Query(Criteria.where("postId").is(postId).and("deletedAt").is(null)), Comment.class);
+        return mongoTemplate.find(new Query(Criteria.where("postId").is(postId)
+                .and("deletedAt").is(null)), Comment.class);
     }
 
     @Override
@@ -41,9 +42,9 @@ public class CommentDAOImpl implements CommentDAO {
         Query query = new Query(Criteria.where("postId").is(comment.getPostId())
                 .and("id").is(comment.getId())
                 .and("deletedAt").is(null));
-        Update update = new Update();
-        update.set("content", commentPatchRequest.content());
-        update.set("updatedAt", LocalDateTime.now());
+        Update update = new Update()
+                .set("content", commentPatchRequest.content())
+                .set("updatedAt", LocalDateTime.now());
         mongoTemplate.updateFirst(query, update, Comment.class);
     }
 
@@ -52,8 +53,8 @@ public class CommentDAOImpl implements CommentDAO {
         Query query = new Query(Criteria.where("postId").is(comment.getPostId())
                 .and("id").is(comment.getId())
                 .and("deletedAt").is(null));
-        Update update = new Update();
-        update.set("deletedAt", LocalDateTime.now());
+        Update update = new Update()
+                .set("deletedAt", LocalDateTime.now());
         mongoTemplate.updateFirst(query, update, Comment.class);
     }
 }

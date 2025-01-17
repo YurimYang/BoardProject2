@@ -27,14 +27,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponse createComment(CommentRequest commentRequest) {
-        boardDAO.selectBoardById(commentRequest.postId()).orElseThrow(
-                () -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
-        return CommentMapper.toCommentResponse(commentDAO.insertComment(CommentMapper.toComment(commentRequest)));
+        validatePostExists(commentRequest.postId());
+        Comment comment = CommentMapper.toComment(commentRequest);
+        Comment savedComment = commentDAO.insertComment(comment);
+        return CommentMapper.toCommentResponse(savedComment);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CommentResponse> getAllComments(String postId) {
+        validatePostExists(postId);
         List<Comment> commentList = commentDAO.selectCommentsByPostId(postId);
         if(commentList.isEmpty()){
             throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
@@ -42,21 +44,27 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.toCommentListResponse(commentList);
     }
 
+    private void validatePostExists(String postId){
+        boardDAO.selectBoardById(postId).orElseThrow(()->
+                new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+    }
+
     @Override
     @Transactional
-    public void updateComment(String commentId, CommentPatchRequest commentPatchRequest) {
-        Comment searchedComment = getCommentById(commentId);
+    public CommentResponse updateComment(String commentId, CommentPatchRequest commentPatchRequest) {
+        Comment searchedComment = findValidComment(commentId);
         commentDAO.updateComment(searchedComment, commentPatchRequest);
+        return CommentMapper.toCommentResponse(findValidComment(commentId));
     }
 
     @Override
     @Transactional
     public void deleteComment(String commentId) {
-        Comment searchedComment = getCommentById(commentId);
+        Comment searchedComment = findValidComment(commentId);
         commentDAO.deleteComment(searchedComment);
     }
 
-    private Comment getCommentById(String commentId) {
+    private Comment findValidComment(String commentId) {
         return commentDAO.selectCommentById(commentId)
                 .filter(c -> !c.isDeleted())
                 .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));

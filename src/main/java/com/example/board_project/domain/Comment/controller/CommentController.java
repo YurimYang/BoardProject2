@@ -25,35 +25,35 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    @ApiResponse(responseCode = "201", description = "created", content = {
+    @ApiResponse(responseCode = "201", description = "Created", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class))
     })
     @Operation(summary = "댓글 등록 API", description = "댓글을 등록하는 API입니다.")
-    public ResponseDTO<CommentResponse> createPost(@Valid @RequestBody CommentRequest commentRequest) {
+    public ResponseDTO<CommentResponse> createComment(@Valid @RequestBody CommentRequest commentRequest) {
         return ResponseDTO.res(commentService.createComment(commentRequest), "댓글 등록을 성공했습니다.");
     }
 
-    @GetMapping("/comment-history/{post_id}")
-    @ApiResponse(responseCode = "200", description = "ok", content = {
+    @GetMapping("/{post_id}")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class))
     })
-    @Operation(summary = "댓글 전체 조회 API", description = "게시판의 글을 전체 조회하는 API입니다.")
-    public ResponseDTO<List<CommentResponse>> getAllPosts(@PathVariable("post_id") String postId) {
+    @Operation(summary = "댓글 전체 조회 API", description = "게시판의 댓글을 전체 조회하는 API입니다.")
+    public ResponseDTO<List<CommentResponse>> getAllComments(@PathVariable("post_id") String postId) {
         return ResponseDTO.res(commentService.getAllComments(postId), "해당 게시글의 댓글 조회에 성공했습니다.");
     }
 
-    @PatchMapping("/comment-history/{comment_id}")
-    @ApiResponse(responseCode = "200", description = "ok", content = {
-            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+    @PatchMapping("/{comment_id}")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponse.class))
     })
-    @Operation(summary = "특정 게시글 수정 API", description = "특정 댓글을 수정하는 API입니다.")
-    public ResponseDTO<String> updateComment(@PathVariable("comment_id") String commentId, @Valid @RequestBody CommentPatchRequest commentPatchRequest) {
-        commentService.updateComment(commentId, commentPatchRequest);
-        return ResponseDTO.res("게시글 수정에 성공했습니다.");
+    @Operation(summary = "특정 댓글 수정 API", description = "특정 댓글을 수정하는 API입니다.")
+    public ResponseDTO<CommentResponse> updateComment(@PathVariable("comment_id") String commentId,
+                                             @Valid @RequestBody CommentPatchRequest commentPatchRequest) {
+        return ResponseDTO.res(commentService.updateComment(commentId, commentPatchRequest), "댓글 수정에 성공했습니다.");
     }
 
-    @DeleteMapping("/comment-history/{comment_id}")
-    @ApiResponse(responseCode = "200", description = "ok", content = {
+    @DeleteMapping("/{comment_id}")
+    @ApiResponse(responseCode = "200", description = "OK", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
     })
     @Operation(summary = "특정 댓글 삭제 API", description = "특정 댓글을 삭제하는 API입니다.")
@@ -61,6 +61,4 @@ public class CommentController {
         commentService.deleteComment(commentId);
         return ResponseDTO.res("댓글 삭제에 성공했습니다.");
     }
-
-
 }

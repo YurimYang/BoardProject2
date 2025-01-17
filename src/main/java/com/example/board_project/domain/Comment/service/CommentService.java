@@ -9,6 +9,6 @@ import java.util.List;
 public interface CommentService {
     CommentResponse createComment(CommentRequest commentRequest);
     List<CommentResponse> getAllComments(String postId);
-    void updateComment(String commentId, CommentPatchRequest commentPatchRequest);
+    CommentResponse updateComment(String commentId, CommentPatchRequest commentPatchRequest);
     void deleteComment(String commentId);
 }

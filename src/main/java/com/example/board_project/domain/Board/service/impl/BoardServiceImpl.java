@@ -59,25 +59,25 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public PostResponse getPost(String postId) {
-        return BoardMapper.toPostResponse(findActivePostById(postId));
+        return BoardMapper.toPostResponse(findValidPost(postId));
     }
 
     @Override
     @Transactional
     public PostResponse updatePost(String postId, PostPatchRequest postPatchRequest) {
-        Board searchedBoard = findActivePostById(postId);
+        Board searchedBoard = findValidPost(postId);
         boardDAO.updateBoard(searchedBoard, postPatchRequest);
-        return BoardMapper.toPostResponse(findActivePostById(postId));
+        return BoardMapper.toPostResponse(findValidPost(postId));
     }
 
     @Override
     @Transactional
     public void deletePost(String postId) {
-        Board searchedBoard = findActivePostById(postId);
+        Board searchedBoard = findValidPost(postId);
         boardDAO.deleteBoardById(searchedBoard);
     }
 
-    private Board findActivePostById(String postId) {
+    private Board findValidPost(String postId) {
         return boardDAO.selectBoardById(postId)
                 .filter(p -> !p.isDeleted())
                 .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
