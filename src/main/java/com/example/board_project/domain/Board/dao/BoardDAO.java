@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface  BoardDAO {
     Board insertBoard(Board board);
     List<Board> selectAllBoard();
+    Page<Board> selectAllPagedBoard(Pageable pageable);
     Optional<Board> selectBoardById(String id);
-    Page<Board> selectAllBoardPage(Pageable pageable);
-    void updateBoard(String postId, PostPatchRequest postPatchRequest);
-    void deleteBoardById(String postId, Board board);
-    List<Board> findByKeyword(BoardSearchEnum type, String keyword);
-    Page<Board> findByKeywordWithPage(BoardSearchEnum type, String keyword, Pageable pageable);
+    void updateBoard(Board board, PostPatchRequest postPatchRequest);
+    void deleteBoardById(Board board);
+    List<Board> findBoardByKeyword(BoardSearchEnum type, String keyword);
+    Page<Board> findPagedBoardByKeyword(BoardSearchEnum type, String keyword, Pageable pageable);
 }

@@ -29,8 +29,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public PostResponse createBoard(PostRequest postRequest) {
-        return BoardMapper.toPostResponse(boardDAO.insertBoard(BoardMapper.toBoard(postRequest)));
+    public PostResponse createPost(PostRequest postRequest) {
+        Board board = BoardMapper.toBoard(postRequest);
+        Board savedBoard = boardDAO.insertBoard(board);
+        return BoardMapper.toPostResponse(savedBoard);
     }
 
     @Override
@@ -41,45 +43,50 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponse getPost(String postId) {
-        Board searchedBoard = findActivePostById(postId);
-        return BoardMapper.toPostResponse(searchedBoard);
+    public List<PostResponse> getAllPostsByPagination(Integer page){
+        Page<Board> boardPage = getPagedBoards(page);
+        return BoardMapper.toAllPostListResponse(boardPage.toList());
+    }
+
+    private Page<Board> getPagedBoards(int page) {
+        validatePage(page);
+        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
+        Page<Board> boardPage = boardDAO.selectAllPagedBoard(pageable);
+        validatePageNotEmpty(boardPage);
+        return boardPage;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPostsByPagination(Integer page){
-        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
-        Page<Board> boardPage = boardDAO.selectAllBoardPage(pageable);
-        validatePage(boardPage);
-        return BoardMapper.toAllPostListResponse(boardPage.toList());
-    }
-
-    private void validatePage(Page<Board> boardPage) {
-        if(boardPage.isEmpty()){
-            throw new PageNotFoundException(ErrorCode.PAGE_NOT_FOUND);
-        }
+    public PostResponse getPost(String postId) {
+        return BoardMapper.toPostResponse(findActivePostById(postId));
     }
 
     @Override
     @Transactional
-    public String updatePost(String postId, PostPatchRequest postPatchRequest) {
+    public PostResponse updatePost(String postId, PostPatchRequest postPatchRequest) {
         Board searchedBoard = findActivePostById(postId);
-        boardDAO.updateBoard(postId,postPatchRequest);
-        return searchedBoard.getId();
+        boardDAO.updateBoard(searchedBoard, postPatchRequest);
+        return BoardMapper.toPostResponse(findActivePostById(postId));
     }
 
     @Override
     @Transactional
     public void deletePost(String postId) {
         Board searchedBoard = findActivePostById(postId);
-        boardDAO.deleteBoardById(postId, searchedBoard);
+        boardDAO.deleteBoardById(searchedBoard);
+    }
+
+    private Board findActivePostById(String postId) {
+        return boardDAO.selectBoardById(postId)
+                .filter(p -> !p.isDeleted())
+                .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PostResponse> searchPost(BoardSearchEnum type, String keyword) {
-        List<Board> searchedBoards = boardDAO.findByKeyword(type, keyword);
+        List<Board> searchedBoards = boardDAO.findBoardByKeyword(type, keyword);
         if(searchedBoards.isEmpty()){
             throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
         }
@@ -89,15 +96,27 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<PostResponse> searchPostByPagination(BoardSearchEnum type, String keyword, int page) {
-        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
-        Page<Board> boardPage = boardDAO.findByKeywordWithPage(type, keyword, pageable);
-        validatePage(boardPage);
+        Page<Board> boardPage = getPagedBoards(type, keyword, page);
         return BoardMapper.toAllPostListResponse(boardPage.toList());
     }
 
-    private Board findActivePostById(String postId) {
-        return boardDAO.selectBoardById(postId)
-                .filter(p -> !p.isDeleted())
-                .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+    private Page<Board> getPagedBoards(BoardSearchEnum type, String keyword, int page) {
+        validatePage(page);
+        Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
+        Page<Board> boardPage = boardDAO.findPagedBoardByKeyword(type, keyword, pageable);
+        validatePageNotEmpty(boardPage);
+        return boardPage;
+    }
+
+    private void validatePage(int page){
+        if(page < 0){
+            throw new PageNotFoundException(ErrorCode.PAGE_NOT_FOUND);
+        }
+    }
+
+    private void validatePageNotEmpty(Page<Board> boardPage) {
+        if(boardPage.isEmpty()){
+            throw new PageNotFoundException(ErrorCode.PAGE_NOT_FOUND);
+        }
     }
 }

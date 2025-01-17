@@ -36,7 +36,7 @@ public class BoardDAOImpl implements BoardDAO {
     }
 
     @Override
-    public Page<Board> selectAllBoardPage(Pageable pageable) {
+    public Page<Board> selectAllPagedBoard(Pageable pageable) {
         Query query = new Query(Criteria.where("deletedAt").is(null)).with(pageable);
         List<Board> boardList = mongoTemplate.find(query, Board.class);
         long count = mongoTemplate.count(query, Board.class);
@@ -50,65 +50,45 @@ public class BoardDAOImpl implements BoardDAO {
     }
 
     @Override
-    public void updateBoard(String postId, PostPatchRequest postPatchRequest) {
-        Query query = new Query(Criteria.where("id").is(postId));
-        Update update = new Update();
-        update.set("title", postPatchRequest.title());
-        update.set("content", postPatchRequest.content());
-        update.set("updatedAt", LocalDateTime.now());
+    public void updateBoard(Board board, PostPatchRequest postPatchRequest) {
+        Query query = new Query(Criteria.where("id").is(board.getId()).and("deletedAt").is(null));
+        Update update = new Update()
+                .set("title", postPatchRequest.title())
+                .set("content", postPatchRequest.content())
+                .set("updatedAt", LocalDateTime.now());
         mongoTemplate.updateFirst(query, update, Board.class);
     }
 
     @Override
-    public void deleteBoardById(String postId, Board board) {
-        Query query = new Query(Criteria.where("id").is(postId));
-
+    public void deleteBoardById(Board board) {
         if(!board.isDeleted()){
-            Update update = new Update();
-            update.set("deletedAt", LocalDateTime.now());
-
+            Query query = new Query(Criteria.where("id").is(board.getId()));
+            Update update = new Update().set("deletedAt", LocalDateTime.now());
             mongoTemplate.updateFirst(query, update, Board.class);
         }
     }
 
     @Override
-    public List<Board> findByKeyword(BoardSearchEnum type, String keyword) {
-        List<Board> boardList = switch (type) {
-            case TITLE -> {
-                Query query = new Query(Criteria.where("title").regex(keyword));
-                yield mongoTemplate.find(query, Board.class);
-            }
-            case CONTENT -> {
-                Query query = new Query(Criteria.where("content").regex(keyword));
-                yield mongoTemplate.find(query, Board.class);
-            }
-            case WRITER -> {
-                Query query = new Query(Criteria.where("writer").regex(keyword));
-                yield mongoTemplate.find(query, Board.class);
-            }
-        };
-        return boardList;
+    public List<Board> findBoardByKeyword(BoardSearchEnum type, String keyword) {
+        Query query = new Query(buildKeywordCriteria(type, keyword).and("deletedAt").is(null));
+        return mongoTemplate.find(query, Board.class);
     }
 
     @Override
-    public Page<Board> findByKeywordWithPage(BoardSearchEnum type, String keyword, Pageable pageable) {
-        List<Board> boardList = switch (type) {
-            case TITLE -> {
-                Query query = new Query(Criteria.where("title").regex(keyword)
-                                                .and("deletedAt").is(null)).with(pageable);
-                yield mongoTemplate.find(query, Board.class);
-            }
-            case CONTENT -> {
-                Query query = new Query(Criteria.where("content").regex(keyword)
-                        .and("deletedAt").is(null)).with(pageable);
-                yield mongoTemplate.find(query, Board.class);
-            }
-            case WRITER -> {
-                Query query = new Query(Criteria.where("writer").regex(keyword)
-                        .and("deletedAt").is(null)).with(pageable);
-                yield mongoTemplate.find(query, Board.class);
-            }
+    public Page<Board> findPagedBoardByKeyword(BoardSearchEnum type, String keyword, Pageable pageable) {
+        Query query = new Query(buildKeywordCriteria(type, keyword)
+                .and("deletedAt")
+                .is(null)).with(pageable);
+        List<Board> boardList = mongoTemplate.find(query, Board.class);
+        long count = mongoTemplate.count(query, Board.class);
+        return new PageImpl<>(boardList, pageable, count);
+    }
+
+    private Criteria buildKeywordCriteria(BoardSearchEnum type, String keyword){
+        return switch (type) {
+            case TITLE -> Criteria.where("title").regex(keyword);
+            case CONTENT -> Criteria.where("content").regex(keyword);
+            case WRITER -> Criteria.where("writer").regex(keyword);
         };
-        return new PageImpl<>(boardList, pageable, boardList.size());
     }
 }
