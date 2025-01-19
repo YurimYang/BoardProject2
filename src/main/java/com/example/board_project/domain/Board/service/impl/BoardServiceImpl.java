@@ -38,7 +38,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<PostResponse> getAllPosts(){
-        return BoardMapper.toAllPostListResponse(boardDAO.selectAllBoard());
+        return BoardMapper.toAllPostListResponse(boardDAO.getAllBoard());
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BoardServiceImpl implements BoardService {
     private Page<Board> getPagedBoards(int page) {
         validatePage(page);
         Pageable pageable = PageRequest.of(page, PAGE_LIMIT);
-        Page<Board> boardPage = boardDAO.selectAllPagedBoard(pageable);
+        Page<Board> boardPage = boardDAO.getAllPagedBoard(pageable);
         validatePageNotEmpty(boardPage);
         return boardPage;
     }
@@ -78,7 +78,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Board findValidPost(String postId) {
-        return boardDAO.selectBoardById(postId)
+        return boardDAO.getBoardById(postId)
                 .filter(p -> !p.isDeleted())
                 .orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
     }

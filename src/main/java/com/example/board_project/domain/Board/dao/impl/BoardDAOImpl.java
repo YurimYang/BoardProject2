@@ -30,13 +30,13 @@ public class BoardDAOImpl implements BoardDAO {
     }
 
     @Override
-    public List<Board> selectAllBoard() {
+    public List<Board> getAllBoard() {
         Query query = new Query(Criteria.where("deletedAt").is(null));
         return mongoTemplate.find(query, Board.class);
     }
 
     @Override
-    public Page<Board> selectAllPagedBoard(Pageable pageable) {
+    public Page<Board> getAllPagedBoard(Pageable pageable) {
         Query query = new Query(Criteria.where("deletedAt").is(null)).with(pageable);
         List<Board> boardList = mongoTemplate.find(query, Board.class);
         long count = mongoTemplate.count(query, Board.class);
@@ -44,7 +44,7 @@ public class BoardDAOImpl implements BoardDAO {
     }
 
     @Override
-    public Optional<Board> selectBoardById(String id) {
+    public Optional<Board> getBoardById(String id) {
         Board board = mongoTemplate.findById(id, Board.class);
         return Optional.ofNullable(board);
     }

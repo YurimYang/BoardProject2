@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validatePostExists(String postId){
-        boardDAO.selectBoardById(postId).orElseThrow(()->
+        boardDAO.getBoardById(postId).orElseThrow(()->
                 new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
     }
 

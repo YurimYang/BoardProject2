@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface  BoardDAO {
     Board insertBoard(Board board);
-    List<Board> selectAllBoard();
-    Page<Board> selectAllPagedBoard(Pageable pageable);
-    Optional<Board> selectBoardById(String id);
+    List<Board> getAllBoard();
+    Page<Board> getAllPagedBoard(Pageable pageable);
+    Optional<Board> getBoardById(String id);
     void updateBoard(Board board, PostPatchRequest postPatchRequest);
     void deleteBoardById(Board board);
     List<Board> findBoardByKeyword(BoardSearchEnum type, String keyword);
