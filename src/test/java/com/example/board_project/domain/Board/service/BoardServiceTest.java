@@ -14,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -120,6 +124,48 @@ public class BoardServiceTest {
 
             //then
             assertThat(result).isNotNull();
+            assertThat(result.get(0).title()).isEqualTo("title");
+            assertThat(result.get(0).content()).isEqualTo("content");
+            assertThat(result.get(0).writer()).isEqualTo("writer");
+        }
+    }
+
+    @Nested
+    @DisplayName("getAllPostsByPagination()는 ")
+    class GetPagedBoardTest {
+
+        @Test
+        @DisplayName("게시글 전체 조회에 성공했습니다.")
+        void getAllPostsByPagination_willSuccess() {
+            //given
+            int page = 1;
+            Pageable pageable = PageRequest.of(page, 10);
+
+            Board board = Board.builder()
+                    .title("title")
+                    .content("content")
+                    .writer("writer")
+                    .build();
+
+            Board board1 = Board.builder()
+                    .title("title1")
+                    .content("content1")
+                    .writer("writer1")
+                    .build();
+
+
+            List<Board> responseList = List.of(board, board1);
+
+            Page<Board> boardPage = new PageImpl<>(responseList, pageable, 1);
+
+            given(boardDAO.getAllPagedBoard(pageable)).willReturn(boardPage);
+
+            //when
+            List<PostResponse> result = boardService.getAllPostsByPagination(page);
+
+            //then
+            assertThat(result).isNotNull();
+            assertThat(result.size()).isEqualTo(2);
             assertThat(result.get(0).title()).isEqualTo("title");
             assertThat(result.get(0).content()).isEqualTo("content");
             assertThat(result.get(0).writer()).isEqualTo("writer");
@@ -255,4 +301,47 @@ public class BoardServiceTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("searchPostByPagination()는 ")
+    class searchPagedPostTest {
+
+        @Test
+        @DisplayName("특정 게시글 검색에 성공했습니다.")
+        void searchPostByPagination_willSuccess() {
+            //given
+            int page = 1;
+            Pageable pageable = PageRequest.of(page, 10);
+
+            Board board = Board.builder()
+                    .title("title")
+                    .content("content")
+                    .writer("writer")
+                    .build();
+
+            Board board1 = Board.builder()
+                    .title("title1")
+                    .content("content1")
+                    .writer("writer1")
+                    .build();
+
+            BoardSearchEnum type = BoardSearchEnum.TITLE;
+
+            String keyword = "title";
+
+            List<Board> responseList = List.of(board, board1);
+
+            Page<Board> boardPage = new PageImpl<>(responseList, pageable, 1);
+
+            given(boardDAO.findPagedBoardByKeyword(type, keyword, pageable)).willReturn(boardPage);
+
+            //when
+            List<PostResponse> result = boardService.searchPostByPagination(type, keyword, page);
+
+            //then
+            assertThat(result).isNotNull();
+            assertThat(result.size()).isEqualTo(2);
+            assertThat(result.get(0).title()).isEqualTo("title");
+        }
+    }
 }
