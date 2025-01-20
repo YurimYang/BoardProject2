@@ -111,7 +111,7 @@ public class CommentServiceTest {
             List<Comment> commentList = List.of(comment, comment1);
 
             given(boardDAO.getBoardById(postId)).willReturn(Optional.of(board));
-            given(commentDAO.selectCommentsByPostId(any(String.class))).willReturn(commentList);
+            given(commentDAO.getCommentsByPostId(any(String.class))).willReturn(commentList);
 
             //when
             List<CommentResponse> result = commentService.getAllComments(postId);
@@ -149,7 +149,7 @@ public class CommentServiceTest {
                     .content("update content")
                     .build();
 
-            given(commentDAO.selectCommentById(commentId)).willReturn(Optional.of(comment));
+            given(commentDAO.getCommentById(commentId)).willReturn(Optional.of(comment));
 
             doAnswer(invocation -> {
                 Comment commentArg = invocation.getArgument(0); // 첫 번째 인자로 Board 객체
@@ -192,7 +192,7 @@ public class CommentServiceTest {
                     .build();
             String commentId = comment.getId();
 
-            given(commentDAO.selectCommentById(commentId)).willReturn(Optional.of(comment));
+            given(commentDAO.getCommentById(commentId)).willReturn(Optional.of(comment));
             doNothing().when(commentDAO).deleteComment(comment);
 
             //when

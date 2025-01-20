@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponse> getAllComments(String postId) {
         validatePostExists(postId);
-        List<Comment> commentList = commentDAO.selectCommentsByPostId(postId);
+        List<Comment> commentList = commentDAO.getCommentsByPostId(postId);
         if(commentList.isEmpty()){
             throw new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND);
         }
@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Comment findValidComment(String commentId) {
-        return commentDAO.selectCommentById(commentId)
+        return commentDAO.getCommentById(commentId)
                 .filter(c -> !c.isDeleted())
                 .orElseThrow(() -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND));
     }

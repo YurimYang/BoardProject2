@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface CommentDAO {
     Comment insertComment(Comment comment);
-    Optional<Comment> selectCommentById(String commentId);
-    List<Comment> selectCommentsByPostId(String postId);
+    Optional<Comment> getCommentById(String commentId);
+    List<Comment> getCommentsByPostId(String postId);
     void updateComment(Comment comment, CommentPatchRequest commentPatchRequest);
     void deleteComment(Comment comment);
 }

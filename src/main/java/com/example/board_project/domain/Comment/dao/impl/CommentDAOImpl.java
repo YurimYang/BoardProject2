@@ -26,13 +26,13 @@ public class CommentDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Optional<Comment> selectCommentById(String commentId) {
+    public Optional<Comment> getCommentById(String commentId) {
         Comment comment = mongoTemplate.findById(commentId, Comment.class);
         return Optional.ofNullable(comment);
     }
 
     @Override
-    public List<Comment> selectCommentsByPostId(String postId) {
+    public List<Comment> getCommentsByPostId(String postId) {
         return mongoTemplate.find(new Query(Criteria.where("postId").is(postId)
                 .and("deletedAt").is(null)), Comment.class);
     }
