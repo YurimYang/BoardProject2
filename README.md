@@ -17,7 +17,7 @@
 
 <br></br>
 
-### 🧩 테이블 구조
+## 🧩 테이블 구조
 
 #### Board
 ![Image](https://github.com/user-attachments/assets/229904b0-b380-4da3-9209-42fa8c6e619a)
@@ -26,7 +26,10 @@
 #### Base Entity
 ![Image](https://github.com/user-attachments/assets/b90ca9c0-0612-45c3-9796-bd2a7d6ead5b)
 
-### 아키텍처 설계
+
+<br></br>
+
+## 🏛️ 아키텍처 설계
 
 #### [Domain 형 구조 & 인터페이스/구현체 분리]
 
@@ -44,7 +47,7 @@
 
 <br></br>
 
-### ☎️ RESTful API
+## ☎️ RESTful API
 
 http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행가능)
 
@@ -52,7 +55,7 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 <br></br>
 
-### 🧪 Test Code
+## 🧪 Test Code
 
 - JUnit을 활용한 Service 중심의 Unit Test 진행 `@ExtendWith(MocktioExtension.class)`
 
@@ -75,12 +78,13 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 - mongoTemplate (https://github.com/YurimYang/BoardProject2 ) : 관련 필드 대상으로 연산자를 사용하여 DB 수정
 
-
+<br></br>
 
 ### id 설정 - ObjectId, 자동증가 Id, UUID
 
 <img width="714" alt="Image" src="https://github.com/user-attachments/assets/5ea2b4e8-6281-4d8c-b71a-21dfe8104016" />
 
+<br></br>
 
 ### mongoDB와 JPA의 차이점
 
@@ -92,7 +96,7 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 JPA와 다리 영속성 컨텍스트가 없으므로 변경된 Entity를 수동으로 저장해야합니다. 그렇기에, DAO에 쿼리를 직접 작성하여 데이터베이스에 반영해야합니다.
 
-
+<br></br>
 
 ### 예외처리
 
