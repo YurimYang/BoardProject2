@@ -72,11 +72,18 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 ## 📣 Issue
 
-### mongoRepository와 mongoTemplate에 대한 차이점 파악
+### [RELEASE-1] mongoRepository와 mongoTemplate에 대한 차이점 파악
 
 - mongoRepository (https://github.com/YurimYang/BoardProject ) : 모든 필드를 포함하는 POJO(객체) 와 함께 작동하는 기본적인 CRUD만 제공
 
 - mongoTemplate (https://github.com/YurimYang/BoardProject2 ) : 관련 필드 대상으로 연산자를 사용하여 DB 수정
+
+<br></br>
+
+### [RELEASE-2] mongoRepository와 mongoTemplate 연동 
+mongoRepository와 mongoTemplate를 연동하여, 복잡한 쿼리의 경우 mongoTemplate의 연산자를 사용할 수 있도록 구현
+
+  <img width="1098" alt="Image" src="https://github.com/user-attachments/assets/c78e3479-b2f0-4b62-bf04-7874ca25a07c" />
 
 <br></br>
 
