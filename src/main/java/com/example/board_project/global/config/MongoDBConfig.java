@@ -10,9 +10,14 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @EnableMongoAuditing
 @Configuration
+@EnableMongoRepositories(basePackages = {
+        "com.example.board_project.domain.Board.repository",
+        "com.example.board_project.domain.Comment.repository"
+})
 public class MongoDBConfig {
     @Bean
     public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory mongoDatabaseFactory,
