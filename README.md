@@ -20,12 +20,11 @@
 ### 🧩 테이블 구조
 
 #### Board
-![img.png](img.png)
+![Image](https://github.com/user-attachments/assets/229904b0-b380-4da3-9209-42fa8c6e619a)
 #### Comment
-![img_1.png](img_1.png)
+![Image](https://github.com/user-attachments/assets/8ef64231-a23c-4ad6-a7ca-68efd7624edc)
 #### Base Entity
-![img_2.png](img_2.png)
-
+![Image](https://github.com/user-attachments/assets/b90ca9c0-0612-45c3-9796-bd2a7d6ead5b)
 
 ### 아키텍처 설계
 
@@ -49,7 +48,7 @@
 
 http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행가능)
 
-![img_3.png](img_3.png)
+![Image](https://github.com/user-attachments/assets/1d179130-fe64-4fd7-8484-3b855e6a22ef)
 
 <br></br>
 
@@ -80,7 +79,7 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 ### id 설정 - ObjectId, 자동증가 Id, UUID
 
-![img_4.png](img_4.png)
+<img width="714" alt="Image" src="https://github.com/user-attachments/assets/5ea2b4e8-6281-4d8c-b71a-21dfe8104016" />
 
 
 ### mongoDB와 JPA의 차이점
