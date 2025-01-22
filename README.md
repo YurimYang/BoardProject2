@@ -70,6 +70,9 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 
 <br></br>
 
+
+
+
 ## 📣 Issue
 
 ### [RELEASE-1] mongoRepository와 mongoTemplate에 대한 차이점 파악
@@ -81,9 +84,21 @@ http://127.0.0.1:8080/swagger-ui/index.html#/BOARD API (로컬에서만 진행�
 <br></br>
 
 ### [RELEASE-2] mongoRepository와 mongoTemplate 연동 
-mongoRepository와 mongoTemplate를 연동하여, 복잡한 쿼리의 경우 mongoTemplate의 연산자를 사용할 수 있도록 구현
+※ mongoRepository와 mongoTemplate를 연동하여, 복잡한 쿼리의 경우 mongoTemplate의 연산자를 사용할 수 있도록 구현
 
-  <img width="1098" alt="Image" src="https://github.com/user-attachments/assets/c78e3479-b2f0-4b62-bf04-7874ca25a07c" />
+<img width="744" alt="Image" src="https://github.com/user-attachments/assets/6c4580da-ca20-4264-a32c-1bbd424e0eb6" />
+
+<img width="1098" alt="Image" src="https://github.com/user-attachments/assets/c78e3479-b2f0-4b62-bf04-7874ca25a07c" />
+
+**구현방식**
+
+- MongoRepository를 상속받는 각 도메인별 Repository 생성
+
+  - 기본적인 CRUD 메소드는 가능하므로, 상속받은 메소드들을 활용한다.
+
+  - 추가적인 쿼리 작성이 필요한 메소드는 MongoTemplate을 활용
+
+- 인터페이스와 구현체를 분리하는 방향으로. 구현체에서 mongoTemplate을 생성자로 생성하여 주입받는 방식으로 메소드 구현
 
 <br></br>
 
@@ -93,7 +108,7 @@ mongoRepository와 mongoTemplate를 연동하여, 복잡한 쿼리의 경우 mon
 
 <br></br>
 
-### mongoDB와 JPA의 차이점
+### mongoDB와 JPA의 차이점 
 
 **JPA**
 
@@ -117,3 +132,5 @@ JPA와 다리 영속성 컨텍스트가 없으므로 변경된 Entity를 수동�
 <br></br>
 * @RestControllerAdvice를 사용하여 글로벌 예외처리를 제공 
   * ExceptionHandler를 통해 ApplicationException을 캐치하고, 클라이언트에게 반환
+
+  
